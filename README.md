@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 \# Reto Técnico - Simple Books API
 
 
@@ -102,3 +103,6 @@ Alan Eduardo Diaz Arosemena
 
 Analista de Pruebas en Formación
 
+=======
+# reto-tecnico-simplebooks-api
+>>>>>>> 2076a08d1fcf59d7a4530d034985d3c44a834a19
