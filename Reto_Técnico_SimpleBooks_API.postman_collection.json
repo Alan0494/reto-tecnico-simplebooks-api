@@ -46,6 +46,44 @@
       "response": []
     },
     {
+      "name": "Registrar Cliente Camino No Feliz",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 409\", () => {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Cliente duplicado informado\", () => {\r\n    pm.expect(response.error).to.exist;\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"clientName\": \"Alan Diaz\",\r\n  \"clientEmail\": \"alan@test.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api-clients/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api-clients",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Estado API",
       "event": [
         {
@@ -136,6 +174,34 @@
       "response": []
     },
     {
+      "name": "Listar Libros por Tipo Inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst books = pm.response.json();\r\n\r\npm.test(\"Existe al menos un libro\", () => {\r\n    pm.expect(books.length).greaterThan(0);\r\n});\r\n\r\npm.environment.set(\"bookId\", books[0].id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/books",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Consultar Libro",
       "event": [
         {
@@ -159,6 +225,35 @@
           "path": [
             "books",
             "{{bookId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar Libro Inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/books/999999",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "books",
+            "999999"
           ]
         }
       },
@@ -217,6 +312,58 @@
       "response": []
     },
     {
+      "name": "Crear Orden Sin Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"bookId\": 1,\r\n  \"customerName\": \"Alan Diaz\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Consultar Todas las Órdenes",
       "event": [
         {
@@ -239,6 +386,37 @@
               "type": "string"
             }
           ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/orders",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Consultar Todas Las Órdenes Sin Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
         },
         "method": "GET",
         "header": [],
@@ -294,6 +472,45 @@
       "response": []
     },
     {
+      "name": "Consultar Orden Inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/orders/ABC123XYZ",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "orders",
+            "ABC123XYZ"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Actualizar Orden",
       "event": [
         {
@@ -341,6 +558,59 @@
           "path": [
             "orders",
             "{{orderId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Actualizar Orden Inexistente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"customerName\": \"Nombre Inexistente\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/orders/ABC123XYZ",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "orders",
+            "ABC123XYZ"
           ]
         }
       },
@@ -419,72 +689,6 @@
           "path": [
             "orders",
             "{{orderId}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "CASO NEGATIVO 1 - Crear Orden Sin Token",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"bookId\": 1,\r\n  \"customerName\": \"Alan\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "{{baseUrl}}/orders",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "orders"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "CASO NEGATIVO 2 - Consultar Libro Inexistente",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "type": "text/javascript",
-            "exec": [
-              "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
-            ]
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/books/999999",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "books",
-            "999999"
           ]
         }
       },
