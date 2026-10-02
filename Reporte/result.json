@@ -1,0 +1,6635 @@
+{
+  "collection": {
+    "_": {
+      "postman_id": "30d13228-5e7e-4e52-a5a2-d32101897a83",
+      "exporter_id": "50613813",
+      "collection_link": "https://go.postman.co/collection/50613813-30d13228-5e7e-4e52-a5a2-d32101897a83?source=collection_link"
+    },
+    "item": [
+      {
+        "id": "88eb020c-6068-405d-8e40-fb9961a7f2ad",
+        "name": "Registrar Cliente",
+        "request": {
+          "url": {
+            "path": [
+              "api-clients",
+              ""
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"clientName\": \"Alan Diaz\",\r\n  \"clientEmail\": \"{{$randomEmail}}\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "f4fefd0d-e599-423f-857e-d58812600787",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 201\", () => {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Token generado\", () => {\r\n    pm.expect(response.accessToken).to.exist;\r\n});\r\n\r\npm.environment.set(\"accessToken\", response.accessToken);"
+              ],
+              "_lastExecutionId": "f7b9382c-e11a-482a-a29b-bfbbd65f4db2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "ee3e85ab-d97d-4adb-b50d-7d5138c2489b",
+        "name": "Registrar Cliente Camino No Feliz",
+        "request": {
+          "url": {
+            "path": [
+              "api-clients",
+              ""
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"clientName\": \"Alan Diaz\",\r\n  \"clientEmail\": \"alan@test.com\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "dbd312e8-44b9-4e2a-af4f-c8baf605784e",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 409\", () => {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Cliente duplicado informado\", () => {\r\n    pm.expect(response.error).to.exist;\r\n});"
+              ],
+              "_lastExecutionId": "8723983f-68b7-46ee-b7c2-4a6a86266af1"
+            }
+          }
+        ]
+      },
+      {
+        "id": "e278900e-ebdf-4da9-89aa-7070a8830ed3",
+        "name": "Estado API",
+        "request": {
+          "url": {
+            "path": [
+              "status"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "889c7336-f6fc-4da5-b339-f083f51432f9",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 200\", () => {\r\n  pm.response.to.have.status(200);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Estado OK\", () => {\r\n  pm.expect(response.status).to.eql(\"OK\");\r\n});"
+              ],
+              "_lastExecutionId": "305ecc1a-818b-4404-9504-3f4deb389c17"
+            }
+          }
+        ]
+      },
+      {
+        "id": "f452f194-a174-4aaa-a26e-87c9cfdadd3e",
+        "name": "Lista de Libros",
+        "request": {
+          "url": {
+            "path": [
+              "books"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "09d3d3a2-8e86-4172-9d50-2e80f1d4b09b",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst books = pm.response.json();\r\n\r\npm.test(\"Existe al menos un libro\", () => {\r\n    pm.expect(books.length).greaterThan(0);\r\n});\r\n\r\npm.environment.set(\"bookId\", books[0].id);"
+              ],
+              "_lastExecutionId": "745f94e9-2bec-49f0-9072-55d9d5091fc6"
+            }
+          }
+        ]
+      },
+      {
+        "id": "0fa2ffb6-3a77-4942-8d51-79f00f3997a1",
+        "name": "Listar Libros por Tipo",
+        "request": {
+          "url": {
+            "path": [
+              "books"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [
+              {
+                "key": "type",
+                "value": "fiction"
+              }
+            ],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "fd2287c0-5671-4afb-b2ad-b90e60da1033",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status code 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst books = pm.response.json();\r\n\r\npm.test(\"Lista devuelta\", () => {\r\n    pm.expect(books.length).to.be.above(0);\r\n});"
+              ],
+              "_lastExecutionId": "36e0908a-3d9f-4239-b069-2b492b702416"
+            }
+          }
+        ]
+      },
+      {
+        "id": "0cdeaa01-e706-4df2-827b-63fc6e127f46",
+        "name": "Listar Libros por Tipo Inexistente",
+        "request": {
+          "url": {
+            "path": [
+              "books"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "819518fb-3238-4c6a-9570-6c5d5a94e9ba",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst books = pm.response.json();\r\n\r\npm.test(\"Existe al menos un libro\", () => {\r\n    pm.expect(books.length).greaterThan(0);\r\n});\r\n\r\npm.environment.set(\"bookId\", books[0].id);"
+              ],
+              "_lastExecutionId": "7158c7f7-92fc-4d57-b3c7-5eb21fe48544"
+            }
+          }
+        ]
+      },
+      {
+        "id": "518d405c-22c1-47a5-95d8-36b4c103fa6d",
+        "name": "Consultar Libro",
+        "request": {
+          "url": {
+            "path": [
+              "books",
+              "{{bookId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "4d2a13f5-b299-47dc-a854-5bff96de1079",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Id correcto\", () => {\r\n   pm.expect(response.id)\r\n     .to.eql(Number(pm.environment.get(\"bookId\")));\r\n});\r\n\r\npm.test(\"Nombre presente\", () => {\r\n    pm.expect(response.name).to.exist;\r\n});\r\n\r\npm.test(\"Tipo presente\", () => {\r\n    pm.expect(response.type).to.exist;\r\n});"
+              ],
+              "_lastExecutionId": "8c10729b-7c46-47df-aab0-dc0d6c4ce1f8"
+            }
+          }
+        ]
+      },
+      {
+        "id": "4bf7597d-a173-40ee-beb9-e12975ba645d",
+        "name": "Consultar Libro Inexistente",
+        "request": {
+          "url": {
+            "path": [
+              "books",
+              "999999"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "89b531f2-b717-4465-aca4-0f25e3758f47",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+              ],
+              "_lastExecutionId": "0861ce39-f8e3-4816-8e3f-3977fd67f7bc"
+            }
+          }
+        ]
+      },
+      {
+        "id": "93463bb9-4cb7-478b-b562-323d78ba26d6",
+        "name": "Crear Orden",
+        "request": {
+          "url": {
+            "path": [
+              "orders"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n   \"bookId\": 1,\r\n   \"customerName\": \"Alan Diaz\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "{{accessToken}}",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "8f0142fa-d7ab-4b97-b30e-6f4af171b731",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 201\", () => {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Orden creada\", () => {\r\n    pm.expect(response.created).to.be.true;\r\n});\r\n\r\npm.test(\"OrderId existe\", () => {\r\n    pm.expect(response.orderId).to.exist;\r\n});\r\n\r\npm.environment.set(\"orderId\", response.orderId);"
+              ],
+              "_lastExecutionId": "800d897c-7742-4af8-89ab-c5b0106707a4"
+            }
+          }
+        ]
+      },
+      {
+        "id": "e713b6b2-0192-4148-8bac-4d4433babcef",
+        "name": "Crear Orden Sin Token",
+        "request": {
+          "url": {
+            "path": [
+              "orders"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"bookId\": 1,\r\n  \"customerName\": \"Alan Diaz\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "a4b6c952-4fa6-4781-b56b-7e95579e0c66",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});"
+              ],
+              "_lastExecutionId": "fa95f6cd-5639-4867-a0ca-66b885c85d8a"
+            }
+          }
+        ]
+      },
+      {
+        "id": "bb515d41-f6c5-4de5-b55f-a654143f32ca",
+        "name": "Consultar Todas las Órdenes",
+        "request": {
+          "url": {
+            "path": [
+              "orders"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "{{accessToken}}",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "5e080f10-1597-4754-af53-a340c0f975e5",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst orders = pm.response.json();\r\n\r\npm.test(\"Respuesta es una lista\", () => {\r\n    pm.expect(orders).to.be.an(\"array\");\r\n});"
+              ],
+              "_lastExecutionId": "9ca417b1-95e5-4cd3-99ed-af80d926a32e"
+            }
+          }
+        ]
+      },
+      {
+        "id": "36b4ed1a-ecfc-43f3-b09d-17a8c5b20c07",
+        "name": "Consultar Todas Las Órdenes Sin Token",
+        "request": {
+          "url": {
+            "path": [
+              "orders"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET",
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "a6e2c8e9-b5ba-410f-b733-cd46f3a5a642",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});\r\n"
+              ],
+              "_lastExecutionId": "7a69ca3f-c4ea-4db0-b93e-4086d4eb8e7d"
+            }
+          }
+        ]
+      },
+      {
+        "id": "e154d77d-7585-49d6-93dd-a8c32d44f1e3",
+        "name": "Consultar Orden",
+        "request": {
+          "url": {
+            "path": [
+              "orders",
+              "{{orderId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "{{accessToken}}",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "97aaa1e3-230a-4989-8243-454bacceb900",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst order = pm.response.json();\r\n\r\npm.test(\"CustomerName presente\", () => {\r\n    pm.expect(order.customerName).to.exist;\r\n});\r\n\r\npm.test(\"BookId presente\", () => {\r\n    pm.expect(order.bookId).to.exist;\r\n});\r\nconsole.log(pm.response.text());"
+              ],
+              "_lastExecutionId": "16031383-0d4e-4df1-a012-41e52221b66d"
+            }
+          }
+        ]
+      },
+      {
+        "id": "3b80316f-dda3-4ce3-974e-2a36b5336d9c",
+        "name": "Consultar Orden Inexistente",
+        "request": {
+          "url": {
+            "path": [
+              "orders",
+              "ABC123XYZ"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "{{accessToken}}",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "3a13207c-e34a-438f-b17c-9b14d9a85f78",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+              ],
+              "_lastExecutionId": "123c103d-5219-4f92-9315-03bb17ec71b2"
+            }
+          }
+        ]
+      },
+      {
+        "id": "0b276495-7c0a-4904-9b1f-99527c4ace90",
+        "name": "Actualizar Orden",
+        "request": {
+          "url": {
+            "path": [
+              "orders",
+              "{{orderId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "PATCH",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n   \"customerName\":\"Alan Diaz Actualizado\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "{{accessToken}}",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "07d15c30-4c58-488a-9002-36beedb712d1",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 204\", () => {\r\n    pm.response.to.have.status(204);\r\n});"
+              ],
+              "_lastExecutionId": "9f5ab4c6-e0b2-4a67-bc73-ebb2529d6317"
+            }
+          }
+        ]
+      },
+      {
+        "id": "b3d4fa6b-9dae-43c9-988d-5b9262783993",
+        "name": "Actualizar Orden Inexistente",
+        "request": {
+          "url": {
+            "path": [
+              "orders",
+              "ABC123XYZ"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "PATCH",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"customerName\": \"Nombre Inexistente\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "{{accessToken}}",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "625ce330-6eb0-41dc-9d8c-14cda764c869",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+              ],
+              "_lastExecutionId": "4570a1fd-b60d-4215-818e-164675b450bc"
+            }
+          }
+        ]
+      },
+      {
+        "id": "52b913f5-a16f-430d-8a43-a5e413242651",
+        "name": "Validar Actualización",
+        "request": {
+          "url": {
+            "path": [
+              "orders",
+              "{{orderId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "{{accessToken}}",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "96aec9c0-26c5-43f6-a2a1-3c982736fadb",
+              "type": "text/javascript",
+              "exec": [
+                "const response = pm.response.json();\r\n \r\npm.test(\"Nombre actualizado\", () => {\r\npm.expect(response.customerName)\r\n.to.eql(\"Alan Diaz Actualizado\");\r\n});"
+              ],
+              "_lastExecutionId": "ae6389dc-9e04-42cc-afdd-985fc1905aa6"
+            }
+          }
+        ]
+      },
+      {
+        "id": "77d20b20-5066-4f80-80ab-8e063074004c",
+        "name": "Eliminar Orden",
+        "request": {
+          "url": {
+            "path": [
+              "orders",
+              "{{orderId}}"
+            ],
+            "host": [
+              "{{baseUrl}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "DELETE",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "{{accessToken}}",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "9de073b2-a4f8-4c6c-90bd-5aa7713bb758",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test(\"Status 204\", () => {\r\n    pm.response.to.have.status(204);\r\n});"
+              ],
+              "_lastExecutionId": "f643b0db-5b30-4252-9a56-e8b9f828ca72"
+            }
+          }
+        ]
+      }
+    ],
+    "event": [],
+    "variable": [],
+    "info": {
+      "_postman_id": "30d13228-5e7e-4e52-a5a2-d32101897a83",
+      "name": "Reto_Técnico_SimpleBooks_API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2026-10-01T23:08:35.638Z",
+      "postman_exported_using": "Postman/12.30.5"
+    },
+    "id": "b309aa9d-be60-4ad9-8091-94b02250f59d",
+    "name": "Ambiente-SimpleBooks",
+    "values": [
+      {
+        "description": {
+          "content": "",
+          "type": "text/plain"
+        },
+        "type": "any",
+        "value": "https://simple-books-api.click",
+        "key": "baseUrl"
+      },
+      {
+        "type": "any",
+        "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+        "key": "accessToken"
+      },
+      {
+        "type": "any",
+        "value": 1,
+        "key": "bookId"
+      },
+      {
+        "type": "any",
+        "value": "gdU21N_8Wu0SlyqpexIAC",
+        "key": "orderId"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "customerName"
+      }
+    ]
+  },
+  "globals": {
+    "id": "05771102-6a0c-428c-aa2f-0fb10aa3df4c",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 18,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 18,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 18,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 18,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 18,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 32,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 18,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 160.11111111111111,
+      "responseMin": 106,
+      "responseMax": 329,
+      "responseSd": 46.844765969801074,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1790953791211,
+      "completed": 1790953795532
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 18,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "2e69253f-5bc8-4359-9d83-03826cdea441",
+          "httpRequestId": "0054455c-b957-4682-9daf-1a547389d0bc"
+        },
+        "item": {
+          "id": "88eb020c-6068-405d-8e40-fb9961a7f2ad",
+          "name": "Registrar Cliente",
+          "request": {
+            "url": {
+              "path": [
+                "api-clients",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"clientName\": \"Alan Diaz\",\r\n  \"clientEmail\": \"{{$randomEmail}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "f4fefd0d-e599-423f-857e-d58812600787",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Token generado\", () => {\r\n    pm.expect(response.accessToken).to.exist;\r\n});\r\n\r\npm.environment.set(\"accessToken\", response.accessToken);"
+                ],
+                "_lastExecutionId": "f7b9382c-e11a-482a-a29b-bfbbd65f4db2"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api-clients",
+              ""
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "0d1e87e6-d3f5-477a-b779-5e2f6009f6ef",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "82",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"clientName\": \"Alan Diaz\",\r\n  \"clientEmail\": \"Darius.Casper79@hotmail.com\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "c0ad1eee-8654-476f-8b09-2443a3375fde",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "82"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:51 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc93f-50681abc17bebcb2633502ac;Parent=0cd916a96be1968b;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "9850adc1-43cb-44b0-989b-af50ee0ba5d6"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "Enxh9H76oAMEdrw="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "T_dDBSZZ6Z9VfAKojr7tcwKkbtD_TiqHVjm8GjaUdliFlaChuSCVsA=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              97,
+              99,
+              99,
+              101,
+              115,
+              115,
+              84,
+              111,
+              107,
+              101,
+              110,
+              34,
+              58,
+              34,
+              52,
+              51,
+              101,
+              48,
+              52,
+              50,
+              99,
+              98,
+              54,
+              52,
+              55,
+              50,
+              98,
+              50,
+              97,
+              97,
+              53,
+              53,
+              49,
+              49,
+              54,
+              54,
+              97,
+              97,
+              57,
+              53,
+              98,
+              50,
+              49,
+              99,
+              50,
+              50,
+              53,
+              51,
+              101,
+              52,
+              98,
+              48,
+              99,
+              101,
+              98,
+              57,
+              57,
+              48,
+              100,
+              102,
+              97,
+              50,
+              102,
+              100,
+              52,
+              99,
+              57,
+              53,
+              54,
+              100,
+              100,
+              102,
+              101,
+              50,
+              55,
+              53,
+              51,
+              98,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 329,
+          "responseSize": 82
+        },
+        "id": "88eb020c-6068-405d-8e40-fb9961a7f2ad",
+        "assertions": [
+          {
+            "assertion": "Status 201",
+            "skipped": false
+          },
+          {
+            "assertion": "Token generado",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "ac2978c2-c37d-42a7-80a2-43ae2316b699",
+          "length": 18,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "6ef6a7d7-da47-4588-9898-23252131ba49"
+        },
+        "item": {
+          "id": "ee3e85ab-d97d-4adb-b50d-7d5138c2489b",
+          "name": "Registrar Cliente Camino No Feliz",
+          "request": {
+            "url": {
+              "path": [
+                "api-clients",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"clientName\": \"Alan Diaz\",\r\n  \"clientEmail\": \"alan@test.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "dbd312e8-44b9-4e2a-af4f-c8baf605784e",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Cliente duplicado informado\", () => {\r\n    pm.expect(response.error).to.exist;\r\n});"
+                ],
+                "_lastExecutionId": "8723983f-68b7-46ee-b7c2-4a6a86266af1"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api-clients",
+              ""
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "a9dd38d5-9f08-413a-a413-be889be8fe1c",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "68",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"clientName\": \"Alan Diaz\",\r\n  \"clientEmail\": \"alan@test.com\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          }
+        },
+        "response": {
+          "id": "226b9862-41ba-4e70-a45e-9c8dd292ba5a",
+          "status": "Conflict",
+          "code": 409,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "65"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:51 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc93f-429b2d3447f22a810882ff23;Parent=5c6402573bb3544a;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "98867f9f-9ee7-43a9-810c-dc9c7b29ac8c"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiAEUFoAMESfA="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "SXEZoToTCLsrkQ2Ob7NFDmWIMvIsT9A8nPvzh_8Xq-8Ico0j-hLSCw=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              65,
+              80,
+              73,
+              32,
+              99,
+              108,
+              105,
+              101,
+              110,
+              116,
+              32,
+              97,
+              108,
+              114,
+              101,
+              97,
+              100,
+              121,
+              32,
+              114,
+              101,
+              103,
+              105,
+              115,
+              116,
+              101,
+              114,
+              101,
+              100,
+              46,
+              32,
+              84,
+              114,
+              121,
+              32,
+              97,
+              32,
+              100,
+              105,
+              102,
+              102,
+              101,
+              114,
+              101,
+              110,
+              116,
+              32,
+              101,
+              109,
+              97,
+              105,
+              108,
+              46,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 176,
+          "responseSize": 65
+        },
+        "id": "ee3e85ab-d97d-4adb-b50d-7d5138c2489b",
+        "assertions": [
+          {
+            "assertion": "Status 409",
+            "skipped": false
+          },
+          {
+            "assertion": "Cliente duplicado informado",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "359648a8-3bf0-4faa-9a4d-0a623583494c",
+          "length": 18,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "9f652f85-4ee3-43c2-813d-6238ced5c127"
+        },
+        "item": {
+          "id": "e278900e-ebdf-4da9-89aa-7070a8830ed3",
+          "name": "Estado API",
+          "request": {
+            "url": {
+              "path": [
+                "status"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "889c7336-f6fc-4da5-b339-f083f51432f9",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r\n  pm.response.to.have.status(200);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Estado OK\", () => {\r\n  pm.expect(response.status).to.eql(\"OK\");\r\n});"
+                ],
+                "_lastExecutionId": "305ecc1a-818b-4404-9504-3f4deb389c17"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "status"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "caeb93a7-f48a-43dc-bc80-1524ec8dd6f6",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "1f52e549-2d3b-4736-926e-822011296a06",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "15"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:51 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc93f-0d8f90783d66f8cd2eb50ef5;Parent=67f2b67e348a8bd9;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "c1d5963d-b36c-4c78-a6d4-f87af7e31e2f"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiDHdsIAMECSA="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "UWhWnDptVyXEgu_A8S39c-RuLWFCqcDmDKi7AN1e8X8gpC5k13IF3g=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              79,
+              75,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 147,
+          "responseSize": 15
+        },
+        "id": "e278900e-ebdf-4da9-89aa-7070a8830ed3",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Estado OK",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "e5edadc2-ccce-431a-84fc-51b53b9674b5",
+          "length": 18,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "5e6285de-eb14-480f-b939-df8a09fc2283"
+        },
+        "item": {
+          "id": "f452f194-a174-4aaa-a26e-87c9cfdadd3e",
+          "name": "Lista de Libros",
+          "request": {
+            "url": {
+              "path": [
+                "books"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "09d3d3a2-8e86-4172-9d50-2e80f1d4b09b",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst books = pm.response.json();\r\n\r\npm.test(\"Existe al menos un libro\", () => {\r\n    pm.expect(books.length).greaterThan(0);\r\n});\r\n\r\npm.environment.set(\"bookId\", books[0].id);"
+                ],
+                "_lastExecutionId": "745f94e9-2bec-49f0-9072-55d9d5091fc6"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "books"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "60399f88-b02e-4516-a0c9-545d38e85316",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "4bdfae85-4972-40ef-9001-7de8c49de46a",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "417"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:52 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc940-3b75bbab4d359bf81910d2e8;Parent=0f9c17879e18ce2e;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "d2a498df-5f4c-4846-9e81-d86a88cbb500"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiFEhGoAMEsTQ="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "zckcWseke5erGr7wBvymv-bSiq0-0ZRZd1H69zFJ1kqMfzyEp_q2lA=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              82,
+              117,
+              115,
+              115,
+              105,
+              97,
+              110,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              51,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              86,
+              97,
+              110,
+              105,
+              115,
+              104,
+              105,
+              110,
+              103,
+              32,
+              72,
+              97,
+              108,
+              102,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              52,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              77,
+              105,
+              100,
+              110,
+              105,
+              103,
+              104,
+              116,
+              32,
+              76,
+              105,
+              98,
+              114,
+              97,
+              114,
+              121,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              54,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              86,
+              105,
+              115,
+              99,
+              111,
+              117,
+              110,
+              116,
+              32,
+              87,
+              104,
+              111,
+              32,
+              76,
+              111,
+              118,
+              101,
+              100,
+              32,
+              77,
+              101,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              50,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              74,
+              117,
+              115,
+              116,
+              32,
+              97,
+              115,
+              32,
+              73,
+              32,
+              65,
+              109,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              110,
+              111,
+              110,
+              45,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              102,
+              97,
+              108,
+              115,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              53,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              85,
+              110,
+              116,
+              97,
+              109,
+              101,
+              100,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              110,
+              111,
+              110,
+              45,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 195,
+          "responseSize": 417
+        },
+        "id": "f452f194-a174-4aaa-a26e-87c9cfdadd3e",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Existe al menos un libro",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "2352b07b-6aec-4ec6-98f2-b138cadb69e2",
+          "length": 18,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "6cd5053e-2984-4f41-b162-5a5ac7e356aa"
+        },
+        "item": {
+          "id": "0fa2ffb6-3a77-4942-8d51-79f00f3997a1",
+          "name": "Listar Libros por Tipo",
+          "request": {
+            "url": {
+              "path": [
+                "books"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "fiction"
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "fd2287c0-5671-4afb-b2ad-b90e60da1033",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status code 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst books = pm.response.json();\r\n\r\npm.test(\"Lista devuelta\", () => {\r\n    pm.expect(books.length).to.be.above(0);\r\n});"
+                ],
+                "_lastExecutionId": "36e0908a-3d9f-4239-b069-2b492b702416"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "books"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [
+              {
+                "key": "type",
+                "value": "fiction"
+              }
+            ],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "66eb63b8-4378-49ec-8418-89ab84196d61",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "005acff0-81f3-4853-b667-b3c6788899c5",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "283"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:52 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc940-331018ae31e860f961a1403c;Parent=351ff40cd982b0fe;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "34fb0868-8ce7-4d0f-a19c-f13fa16c72ed"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiIGg2oAMEohA="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "i9y0zJqdk6ma9A4xAB8KcqOGVCuhGGkhRBp1x3CpLO0bNfBeg47SVQ=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              82,
+              117,
+              115,
+              115,
+              105,
+              97,
+              110,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              51,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              86,
+              97,
+              110,
+              105,
+              115,
+              104,
+              105,
+              110,
+              103,
+              32,
+              72,
+              97,
+              108,
+              102,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              52,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              77,
+              105,
+              100,
+              110,
+              105,
+              103,
+              104,
+              116,
+              32,
+              76,
+              105,
+              98,
+              114,
+              97,
+              114,
+              121,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              54,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              86,
+              105,
+              115,
+              99,
+              111,
+              117,
+              110,
+              116,
+              32,
+              87,
+              104,
+              111,
+              32,
+              76,
+              111,
+              118,
+              101,
+              100,
+              32,
+              77,
+              101,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 145,
+          "responseSize": 283
+        },
+        "id": "0fa2ffb6-3a77-4942-8d51-79f00f3997a1",
+        "assertions": [
+          {
+            "assertion": "Status code 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Lista devuelta",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "8544afb4-93ea-40cc-bc5d-f67aa6b3b287",
+          "length": 18,
+          "cycles": 1,
+          "position": 5,
+          "iteration": 0,
+          "httpRequestId": "5fd5bb30-fa76-4ba8-887e-6109f05b4161"
+        },
+        "item": {
+          "id": "0cdeaa01-e706-4df2-827b-63fc6e127f46",
+          "name": "Listar Libros por Tipo Inexistente",
+          "request": {
+            "url": {
+              "path": [
+                "books"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "819518fb-3238-4c6a-9570-6c5d5a94e9ba",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst books = pm.response.json();\r\n\r\npm.test(\"Existe al menos un libro\", () => {\r\n    pm.expect(books.length).greaterThan(0);\r\n});\r\n\r\npm.environment.set(\"bookId\", books[0].id);"
+                ],
+                "_lastExecutionId": "7158c7f7-92fc-4d57-b3c7-5eb21fe48544"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "books"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "76cd8d2e-09f8-4af9-a8d8-e658b0dfefbb",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "3e586105-27dd-469d-9e45-898c0c8f586d",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "417"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:52 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc940-2d565fc82d3bc65436239d37;Parent=3d9c4ca9182e7b50;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "fd25b2cb-9730-4766-a640-fef1ed1646b4"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiKGIzoAMEbLQ="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "7ufbN0KA9artqZ8YXkvBJ5TTRki10ic8TOj_AW6K72B254j3ecUuBA=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              82,
+              117,
+              115,
+              115,
+              105,
+              97,
+              110,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              51,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              86,
+              97,
+              110,
+              105,
+              115,
+              104,
+              105,
+              110,
+              103,
+              32,
+              72,
+              97,
+              108,
+              102,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              52,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              77,
+              105,
+              100,
+              110,
+              105,
+              103,
+              104,
+              116,
+              32,
+              76,
+              105,
+              98,
+              114,
+              97,
+              114,
+              121,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              54,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              86,
+              105,
+              115,
+              99,
+              111,
+              117,
+              110,
+              116,
+              32,
+              87,
+              104,
+              111,
+              32,
+              76,
+              111,
+              118,
+              101,
+              100,
+              32,
+              77,
+              101,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              50,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              74,
+              117,
+              115,
+              116,
+              32,
+              97,
+              115,
+              32,
+              73,
+              32,
+              65,
+              109,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              110,
+              111,
+              110,
+              45,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              102,
+              97,
+              108,
+              115,
+              101,
+              125,
+              44,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              53,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              85,
+              110,
+              116,
+              97,
+              109,
+              101,
+              100,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              110,
+              111,
+              110,
+              45,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              125,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 156,
+          "responseSize": 417
+        },
+        "id": "0cdeaa01-e706-4df2-827b-63fc6e127f46",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Existe al menos un libro",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "50fe8861-3096-4baf-989a-81b9c49fd72a",
+          "length": 18,
+          "cycles": 1,
+          "position": 6,
+          "iteration": 0,
+          "httpRequestId": "0d98177f-94d0-4ea2-be4c-7bdf340c9dee"
+        },
+        "item": {
+          "id": "518d405c-22c1-47a5-95d8-36b4c103fa6d",
+          "name": "Consultar Libro",
+          "request": {
+            "url": {
+              "path": [
+                "books",
+                "{{bookId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "4d2a13f5-b299-47dc-a854-5bff96de1079",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Id correcto\", () => {\r\n   pm.expect(response.id)\r\n     .to.eql(Number(pm.environment.get(\"bookId\")));\r\n});\r\n\r\npm.test(\"Nombre presente\", () => {\r\n    pm.expect(response.name).to.exist;\r\n});\r\n\r\npm.test(\"Tipo presente\", () => {\r\n    pm.expect(response.type).to.exist;\r\n});"
+                ],
+                "_lastExecutionId": "8c10729b-7c46-47df-aab0-dc0d6c4ce1f8"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "books",
+              "1"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "43ce354d-5633-4ee9-8fca-e28d1023f51c",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "4edd04b5-bcd2-467c-9c2c-3a9b54efc2af",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "316"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:52 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc940-01a844cb1336172a1e6f9dc3;Parent=1d0857ed8771f4a7;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "50665c93-0c0a-4f1b-8ddf-ab106d16ddc8"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiMECdIAMEOLg="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "iu5LEL0i-e87YEts6Nl_wphYzA5xmir8yTi933L0Xyil9kECGM_7CA=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              101,
+              110,
+              116,
+              105,
+              116,
+              121,
+              84,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              66,
+              79,
+              79,
+              75,
+              34,
+              44,
+              34,
+              97,
+              118,
+              97,
+              105,
+              108,
+              97,
+              98,
+              108,
+              101,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              44,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              49,
+              55,
+              53,
+              50,
+              50,
+              51,
+              57,
+              52,
+              57,
+              48,
+              56,
+              48,
+              52,
+              44,
+              34,
+              99,
+              114,
+              101,
+              97,
+              116,
+              101,
+              100,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              53,
+              45,
+              48,
+              55,
+              45,
+              49,
+              49,
+              84,
+              49,
+              51,
+              58,
+              49,
+              49,
+              58,
+              51,
+              48,
+              46,
+              56,
+              48,
+              52,
+              90,
+              34,
+              44,
+              34,
+              105,
+              115,
+              98,
+              110,
+              34,
+              58,
+              34,
+              49,
+              55,
+              56,
+              48,
+              56,
+              57,
+              57,
+              52,
+              55,
+              53,
+              34,
+              44,
+              34,
+              71,
+              83,
+              73,
+              49,
+              83,
+              75,
+              34,
+              58,
+              34,
+              66,
+              79,
+              79,
+              75,
+              35,
+              49,
+              34,
+              44,
+              34,
+              110,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              84,
+              104,
+              101,
+              32,
+              82,
+              117,
+              115,
+              115,
+              105,
+              97,
+              110,
+              34,
+              44,
+              34,
+              99,
+              117,
+              114,
+              114,
+              101,
+              110,
+              116,
+              45,
+              115,
+              116,
+              111,
+              99,
+              107,
+              34,
+              58,
+              49,
+              50,
+              44,
+              34,
+              71,
+              83,
+              73,
+              49,
+              80,
+              75,
+              34,
+              58,
+              34,
+              84,
+              89,
+              80,
+              69,
+              35,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              112,
+              114,
+              105,
+              99,
+              101,
+              34,
+              58,
+              49,
+              50,
+              46,
+              57,
+              56,
+              44,
+              34,
+              80,
+              75,
+              34,
+              58,
+              34,
+              66,
+              79,
+              79,
+              75,
+              35,
+              49,
+              34,
+              44,
+              34,
+              97,
+              117,
+              116,
+              104,
+              111,
+              114,
+              34,
+              58,
+              34,
+              74,
+              97,
+              109,
+              101,
+              115,
+              32,
+              80,
+              97,
+              116,
+              116,
+              101,
+              114,
+              115,
+              111,
+              110,
+              32,
+              97,
+              110,
+              100,
+              32,
+              74,
+              97,
+              109,
+              101,
+              115,
+              32,
+              79,
+              46,
+              32,
+              66,
+              111,
+              114,
+              110,
+              34,
+              44,
+              34,
+              116,
+              121,
+              112,
+              101,
+              34,
+              58,
+              34,
+              102,
+              105,
+              99,
+              116,
+              105,
+              111,
+              110,
+              34,
+              44,
+              34,
+              83,
+              75,
+              34,
+              58,
+              34,
+              77,
+              69,
+              84,
+              65,
+              68,
+              65,
+              84,
+              65,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 117,
+          "responseSize": 316
+        },
+        "id": "518d405c-22c1-47a5-95d8-36b4c103fa6d",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Id correcto",
+            "skipped": false
+          },
+          {
+            "assertion": "Nombre presente",
+            "skipped": false
+          },
+          {
+            "assertion": "Tipo presente",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "5276fff4-03fc-4813-a06c-4b7fc25102e8",
+          "length": 18,
+          "cycles": 1,
+          "position": 7,
+          "iteration": 0,
+          "httpRequestId": "b201fe6a-ef0e-4daf-9e69-c76e4c6dce90"
+        },
+        "item": {
+          "id": "4bf7597d-a173-40ee-beb9-e12975ba645d",
+          "name": "Consultar Libro Inexistente",
+          "request": {
+            "url": {
+              "path": [
+                "books",
+                "999999"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "89b531f2-b717-4465-aca4-0f25e3758f47",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+                ],
+                "_lastExecutionId": "0861ce39-f8e3-4816-8e3f-3977fd67f7bc"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "books",
+              "999999"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "aa641243-4846-4cf8-ad53-4d57e5f3d538",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "ab79d276-dec8-4f9a-8a95-fd1f8e2463bd",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "34"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:52 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc940-150c4abe0a4c08b76778259e;Parent=0b5fac0a5f10f697;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "c7c028eb-33f6-4bf9-bf21-7d5075dfe1bd"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiOGUgoAMEX0Q="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "SSx2HScl7UKARzptLI00MOj0sUd_6PSlfpJYaGj_yVt7DZS9MJh5Gw=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              78,
+              111,
+              32,
+              98,
+              111,
+              111,
+              107,
+              32,
+              119,
+              105,
+              116,
+              104,
+              32,
+              105,
+              100,
+              32,
+              57,
+              57,
+              57,
+              57,
+              57,
+              57,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 106,
+          "responseSize": 34
+        },
+        "id": "4bf7597d-a173-40ee-beb9-e12975ba645d",
+        "assertions": [
+          {
+            "assertion": "Status 404",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "ae145504-2e15-45dc-b041-89dc73b497bf",
+          "length": 18,
+          "cycles": 1,
+          "position": 8,
+          "iteration": 0,
+          "httpRequestId": "34d7c42f-b5ac-40af-8982-c4941e4a63e0"
+        },
+        "item": {
+          "id": "93463bb9-4cb7-478b-b562-323d78ba26d6",
+          "name": "Crear Orden",
+          "request": {
+            "url": {
+              "path": [
+                "orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n   \"bookId\": 1,\r\n   \"customerName\": \"Alan Diaz\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "8f0142fa-d7ab-4b97-b30e-6f4af171b731",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\nconst response = pm.response.json();\r\n\r\npm.test(\"Orden creada\", () => {\r\n    pm.expect(response.created).to.be.true;\r\n});\r\n\r\npm.test(\"OrderId existe\", () => {\r\n    pm.expect(response.orderId).to.exist;\r\n});\r\n\r\npm.environment.set(\"orderId\", response.orderId);"
+                ],
+                "_lastExecutionId": "800d897c-7742-4af8-89ab-c5b0106707a4"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer 43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "30bdbe36-c804-4926-a2b6-5417bde2fcf2",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "53",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n   \"bookId\": 1,\r\n   \"customerName\": \"Alan Diaz\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "a6feeecd-75e3-4268-8d57-170c80a5ea53",
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "50"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:53 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc941-22fc0bbc0623b57948e86d6f;Parent=714455d0d367951e;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "4ef3823a-dbb3-4c4d-9a17-d8c31c0f5d4d"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiQEOnIAMEYBQ="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "nGyLBuA57fd7KNOd8o28KA3wSF9ACzmFf8Ua5eLbq45aPPw1LbaMuw=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              99,
+              114,
+              101,
+              97,
+              116,
+              101,
+              100,
+              34,
+              58,
+              116,
+              114,
+              117,
+              101,
+              44,
+              34,
+              111,
+              114,
+              100,
+              101,
+              114,
+              73,
+              100,
+              34,
+              58,
+              34,
+              103,
+              100,
+              85,
+              50,
+              49,
+              78,
+              95,
+              56,
+              87,
+              117,
+              48,
+              83,
+              108,
+              121,
+              113,
+              112,
+              101,
+              120,
+              73,
+              65,
+              67,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 123,
+          "responseSize": 50
+        },
+        "id": "93463bb9-4cb7-478b-b562-323d78ba26d6",
+        "assertions": [
+          {
+            "assertion": "Status 201",
+            "skipped": false
+          },
+          {
+            "assertion": "Orden creada",
+            "skipped": false
+          },
+          {
+            "assertion": "OrderId existe",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "ae5894e8-7c4c-48d0-a6d3-317d2fbaafb3",
+          "length": 18,
+          "cycles": 1,
+          "position": 9,
+          "iteration": 0,
+          "httpRequestId": "1f9a8f20-ccc8-40f4-a3c9-cc51825d10b3"
+        },
+        "item": {
+          "id": "e713b6b2-0192-4148-8bac-4d4433babcef",
+          "name": "Crear Orden Sin Token",
+          "request": {
+            "url": {
+              "path": [
+                "orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"bookId\": 1,\r\n  \"customerName\": \"Alan Diaz\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a4b6c952-4fa6-4781-b56b-7e95579e0c66",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});"
+                ],
+                "_lastExecutionId": "fa95f6cd-5639-4867-a0ca-66b885c85d8a"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "0bd412ba-ebd0-4c11-8b6a-821c67724b01",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "51",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"bookId\": 1,\r\n  \"customerName\": \"Alan Diaz\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "a1a8ec41-74e2-4518-987d-4e7da300ac4d",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "41"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:53 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc941-17c9d0a9125010a107f1d043;Parent=0a8a16467da5200e;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "58c2cafe-7ebf-422d-a1b6-24f68a407215"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiSE3zoAMEeUg="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "7CwRPjxMQYu2my6BRpJz0MIoR2RxUT2YvDoHTU3_YhuuT0ow26LQcA=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              77,
+              105,
+              115,
+              115,
+              105,
+              110,
+              103,
+              32,
+              65,
+              117,
+              116,
+              104,
+              111,
+              114,
+              105,
+              122,
+              97,
+              116,
+              105,
+              111,
+              110,
+              32,
+              104,
+              101,
+              97,
+              100,
+              101,
+              114,
+              46,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 149,
+          "responseSize": 41
+        },
+        "id": "e713b6b2-0192-4148-8bac-4d4433babcef",
+        "assertions": [
+          {
+            "assertion": "Status 401",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "0e224ab6-49e8-44c5-b5d7-d852766e5751",
+          "length": 18,
+          "cycles": 1,
+          "position": 10,
+          "iteration": 0,
+          "httpRequestId": "ad6b9179-9f5d-4020-8540-e1672654d29d"
+        },
+        "item": {
+          "id": "bb515d41-f6c5-4de5-b55f-a654143f32ca",
+          "name": "Consultar Todas las Órdenes",
+          "request": {
+            "url": {
+              "path": [
+                "orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5e080f10-1597-4754-af53-a340c0f975e5",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst orders = pm.response.json();\r\n\r\npm.test(\"Respuesta es una lista\", () => {\r\n    pm.expect(orders).to.be.an(\"array\");\r\n});"
+                ],
+                "_lastExecutionId": "9ca417b1-95e5-4cd3-99ed-af80d926a32e"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer 43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "c40ee1f5-d7b8-4792-a343-9ab06165da65",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "ab67eda3-51de-4f83-8b0f-4043502ab83f",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "109"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:53 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc941-0063e6531717ab874caef580;Parent=073c56faf54c0516;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "3df58178-7173-49c8-9f78-66b03c09471c"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiUEUIIAMEDMg="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "djWYm4VuOROt6GgDZRMgIh-33SfwAdTj7yqFQ3pcLc9Zeh4dwL3TvQ=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              91,
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              103,
+              100,
+              85,
+              50,
+              49,
+              78,
+              95,
+              56,
+              87,
+              117,
+              48,
+              83,
+              108,
+              121,
+              113,
+              112,
+              101,
+              120,
+              73,
+              65,
+              67,
+              34,
+              44,
+              34,
+              98,
+              111,
+              111,
+              107,
+              73,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              99,
+              117,
+              115,
+              116,
+              111,
+              109,
+              101,
+              114,
+              78,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              65,
+              108,
+              97,
+              110,
+              32,
+              68,
+              105,
+              97,
+              122,
+              34,
+              44,
+              34,
+              113,
+              117,
+              97,
+              110,
+              116,
+              105,
+              116,
+              121,
+              34,
+              58,
+              49,
+              44,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              49,
+              55,
+              57,
+              48,
+              57,
+              53,
+              51,
+              55,
+              57,
+              51,
+              49,
+              51,
+              49,
+              125,
+              93
+            ]
+          },
+          "cookie": [],
+          "responseTime": 155,
+          "responseSize": 109
+        },
+        "id": "bb515d41-f6c5-4de5-b55f-a654143f32ca",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          },
+          {
+            "assertion": "Respuesta es una lista",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "d354f965-90f6-492a-ac43-f790bd36a7ae",
+          "length": 18,
+          "cycles": 1,
+          "position": 11,
+          "iteration": 0,
+          "httpRequestId": "b463563b-79f5-4bee-b732-887db7dc4bd9"
+        },
+        "item": {
+          "id": "36b4ed1a-ecfc-43f3-b09d-17a8c5b20c07",
+          "name": "Consultar Todas Las Órdenes Sin Token",
+          "request": {
+            "url": {
+              "path": [
+                "orders"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "noauth",
+              "noauth": []
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "a6e2c8e9-b5ba-410f-b733-cd46f3a5a642",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => {\r\n    pm.response.to.have.status(401);\r\n});\r\n"
+                ],
+                "_lastExecutionId": "7a69ca3f-c4ea-4db0-b93e-4086d4eb8e7d"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "1f63bdbd-f93d-4248-b893-958f4e24c664",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET",
+          "auth": {
+            "type": "noauth",
+            "noauth": []
+          }
+        },
+        "response": {
+          "id": "9de91231-b2c2-402d-b0be-3e3a4ea83a01",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "41"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:53 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc941-139ff3b72bc9123c69fb82d1;Parent=7662ae730498414c;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "e211a0a6-7388-4ecb-ba04-62629443fe0e"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiXEtUoAMEsTQ="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "UFlWYELHIJqIgZZlEerSU4c8rovuK1f65xlKGZVVtCMUz4uabZ8L1A=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              77,
+              105,
+              115,
+              115,
+              105,
+              110,
+              103,
+              32,
+              65,
+              117,
+              116,
+              104,
+              111,
+              114,
+              105,
+              122,
+              97,
+              116,
+              105,
+              111,
+              110,
+              32,
+              104,
+              101,
+              97,
+              100,
+              101,
+              114,
+              46,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 142,
+          "responseSize": 41
+        },
+        "id": "36b4ed1a-ecfc-43f3-b09d-17a8c5b20c07",
+        "assertions": [
+          {
+            "assertion": "Status 401",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "349e1804-438c-45c7-988c-7e13467943f7",
+          "length": 18,
+          "cycles": 1,
+          "position": 12,
+          "iteration": 0,
+          "httpRequestId": "c795ee97-56fa-4c05-999a-b778be2a42d8"
+        },
+        "item": {
+          "id": "e154d77d-7585-49d6-93dd-a8c32d44f1e3",
+          "name": "Consultar Orden",
+          "request": {
+            "url": {
+              "path": [
+                "orders",
+                "{{orderId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "97aaa1e3-230a-4989-8243-454bacceb900",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\nconst order = pm.response.json();\r\n\r\npm.test(\"CustomerName presente\", () => {\r\n    pm.expect(order.customerName).to.exist;\r\n});\r\n\r\npm.test(\"BookId presente\", () => {\r\n    pm.expect(order.bookId).to.exist;\r\n});\r\nconsole.log(pm.response.text());"
+                ],
+                "_lastExecutionId": "16031383-0d4e-4df1-a012-41e52221b66d"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders",
+              "gdU21N_8Wu0SlyqpexIAC"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer 43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "7516b835-3a75-4453-a488-4e68c91d7af1",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "ea13cdf9-61ba-4d02-ab5e-daabc19fd5f0",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "107"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:54 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc942-200244c02267adcf46aa1f3f;Parent=7b35f008f0ce8f7b;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "1e73ac3f-6ad1-4180-8909-c2a8d63b7c32"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxiaHxqIAMETNw="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "OWuzZDLExtuxtio7MHBOMCA1EC5NFQUIUtFdc-V1r19Ik4IIvhu48Q=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              103,
+              100,
+              85,
+              50,
+              49,
+              78,
+              95,
+              56,
+              87,
+              117,
+              48,
+              83,
+              108,
+              121,
+              113,
+              112,
+              101,
+              120,
+              73,
+              65,
+              67,
+              34,
+              44,
+              34,
+              98,
+              111,
+              111,
+              107,
+              73,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              99,
+              117,
+              115,
+              116,
+              111,
+              109,
+              101,
+              114,
+              78,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              65,
+              108,
+              97,
+              110,
+              32,
+              68,
+              105,
+              97,
+              122,
+              34,
+              44,
+              34,
+              113,
+              117,
+              97,
+              110,
+              116,
+              105,
+              116,
+              121,
+              34,
+              58,
+              49,
+              44,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              49,
+              55,
+              57,
+              48,
+              57,
+              53,
+              51,
+              55,
+              57,
+              51,
+              49,
+              51,
+              49,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 185,
+          "responseSize": 107
+        },
+        "id": "e154d77d-7585-49d6-93dd-a8c32d44f1e3",
+        "assertions": [
+          {
+            "assertion": "Status 200",
+            "skipped": false
+          },
+          {
+            "assertion": "CustomerName presente",
+            "skipped": false
+          },
+          {
+            "assertion": "BookId presente",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "5cf66766-7437-4048-abed-dd2ccf95f56a",
+          "length": 18,
+          "cycles": 1,
+          "position": 13,
+          "iteration": 0,
+          "httpRequestId": "a3f023c8-4ba0-4ef8-aac9-cf20e285be36"
+        },
+        "item": {
+          "id": "3b80316f-dda3-4ce3-974e-2a36b5336d9c",
+          "name": "Consultar Orden Inexistente",
+          "request": {
+            "url": {
+              "path": [
+                "orders",
+                "ABC123XYZ"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3a13207c-e34a-438f-b17c-9b14d9a85f78",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+                ],
+                "_lastExecutionId": "123c103d-5219-4f92-9315-03bb17ec71b2"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders",
+              "ABC123XYZ"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer 43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "7dc70fc3-ede2-4b51-a9b8-10e4e6d58703",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "8932c9cf-8c03-45db-924c-df4232f1b67e",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "39"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:54 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc942-14fb3cfc3e8db6b848e83740;Parent=4428b5cc4a564926;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "1ab7faa6-830f-4612-8cf4-dd26db9ed91f"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxicGg6IAMEOig="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "rcfuWJuQObvHonONA4oRe0yk2NOUbAX_GOX264J9oJL0zWbfSigLsA=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              78,
+              111,
+              32,
+              111,
+              114,
+              100,
+              101,
+              114,
+              32,
+              119,
+              105,
+              116,
+              104,
+              32,
+              105,
+              100,
+              32,
+              65,
+              66,
+              67,
+              49,
+              50,
+              51,
+              88,
+              89,
+              90,
+              46,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 151,
+          "responseSize": 39
+        },
+        "id": "3b80316f-dda3-4ce3-974e-2a36b5336d9c",
+        "assertions": [
+          {
+            "assertion": "Status 404",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "3b6f2539-a382-4546-8c99-4fd54994b412",
+          "length": 18,
+          "cycles": 1,
+          "position": 14,
+          "iteration": 0,
+          "httpRequestId": "33f48654-85d5-4956-8a73-85d6f280cc8a"
+        },
+        "item": {
+          "id": "0b276495-7c0a-4904-9b1f-99527c4ace90",
+          "name": "Actualizar Orden",
+          "request": {
+            "url": {
+              "path": [
+                "orders",
+                "{{orderId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n   \"customerName\":\"Alan Diaz Actualizado\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "07d15c30-4c58-488a-9002-36beedb712d1",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => {\r\n    pm.response.to.have.status(204);\r\n});"
+                ],
+                "_lastExecutionId": "9f5ab4c6-e0b2-4a67-bc73-ebb2529d6317"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders",
+              "gdU21N_8Wu0SlyqpexIAC"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer 43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "868e11d4-ab5f-4750-b69a-44dcc06a9eac",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "47",
+              "system": true
+            }
+          ],
+          "method": "PATCH",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n   \"customerName\":\"Alan Diaz Actualizado\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "44c9fb5c-6105-4621-8e4f-c1b6b55d0b4e",
+          "status": "No Content",
+          "code": 204,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "0"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:54 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc942-1d0ddb7356140ebc21f25d70;Parent=641838a924a0ad31;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "269c82b2-c04a-4f57-9777-a10ab90c152e"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxieETTIAMEVrw="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "hIImOr6s2JgVKTV7IwmehjWtpFT43LHPBiTpoBQf-tmH4egXQkZKOA=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": []
+          },
+          "cookie": [],
+          "responseTime": 162,
+          "responseSize": 0
+        },
+        "id": "0b276495-7c0a-4904-9b1f-99527c4ace90",
+        "assertions": [
+          {
+            "assertion": "Status 204",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "edf6ad85-760d-4df6-b9ce-5a8b8c91275c",
+          "length": 18,
+          "cycles": 1,
+          "position": 15,
+          "iteration": 0,
+          "httpRequestId": "64f4f8d3-fccb-42d5-8384-61513ae2ccba"
+        },
+        "item": {
+          "id": "b3d4fa6b-9dae-43c9-988d-5b9262783993",
+          "name": "Actualizar Orden Inexistente",
+          "request": {
+            "url": {
+              "path": [
+                "orders",
+                "ABC123XYZ"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"customerName\": \"Nombre Inexistente\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "625ce330-6eb0-41dc-9d8c-14cda764c869",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => {\r\n    pm.response.to.have.status(404);\r\n});"
+                ],
+                "_lastExecutionId": "4570a1fd-b60d-4215-818e-164675b450bc"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders",
+              "ABC123XYZ"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Bearer 43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "b95ea86f-2487-4a6a-8ed2-86c6c4e5a10c",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "44",
+              "system": true
+            }
+          ],
+          "method": "PATCH",
+          "body": {
+            "mode": "raw",
+            "raw": "{\r\n  \"customerName\": \"Nombre Inexistente\"\r\n}",
+            "options": {
+              "raw": {
+                "language": "json"
+              }
+            }
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "b5bf77c3-fcf7-4eed-8c35-261a2b4a0b2c",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "39"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:54 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc942-6e94a9696182bb0d38eab1e2;Parent=50ab5d5493a4ac41;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "07a4ba58-9528-4bcf-b830-189ca0b85305"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxigHU0oAMEX5g="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Error from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "9MJ-Z-_LK6vcLidpzqWgCDMHYDNITOghPTF487knTo-HDfCab-UI1w=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              78,
+              111,
+              32,
+              111,
+              114,
+              100,
+              101,
+              114,
+              32,
+              119,
+              105,
+              116,
+              104,
+              32,
+              105,
+              100,
+              32,
+              65,
+              66,
+              67,
+              49,
+              50,
+              51,
+              88,
+              89,
+              90,
+              46,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 119,
+          "responseSize": 39
+        },
+        "id": "b3d4fa6b-9dae-43c9-988d-5b9262783993",
+        "assertions": [
+          {
+            "assertion": "Status 404",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "6c2a20ab-f730-4aa1-8f8f-d94172b97c7b",
+          "length": 18,
+          "cycles": 1,
+          "position": 16,
+          "iteration": 0,
+          "httpRequestId": "8d181f4c-aa87-40d2-b647-cb6a85d98a01"
+        },
+        "item": {
+          "id": "52b913f5-a16f-430d-8a43-a5e413242651",
+          "name": "Validar Actualización",
+          "request": {
+            "url": {
+              "path": [
+                "orders",
+                "{{orderId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "96aec9c0-26c5-43f6-a2a1-3c982736fadb",
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n \r\npm.test(\"Nombre actualizado\", () => {\r\npm.expect(response.customerName)\r\n.to.eql(\"Alan Diaz Actualizado\");\r\n});"
+                ],
+                "_lastExecutionId": "ae6389dc-9e04-42cc-afdd-985fc1905aa6"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders",
+              "gdU21N_8Wu0SlyqpexIAC"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer 43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "44b1ac45-9c47-4676-ba10-d5a8503b7242",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "43658304-51ea-4de2-b723-47078af9e8ce",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "119"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:55 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc943-1f6d993571c2c7c646f9bec7;Parent=1f3a08d96057b2f8;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "011d549d-f28a-46cc-baa3-e9ecbbc8643b"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxijF5zIAMEaKw="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "sSBnlgD27ba-7jU4Nt_zuFk_3cjBDzRtHTulpSVPXHcuizvqTvA_Zw=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              105,
+              100,
+              34,
+              58,
+              34,
+              103,
+              100,
+              85,
+              50,
+              49,
+              78,
+              95,
+              56,
+              87,
+              117,
+              48,
+              83,
+              108,
+              121,
+              113,
+              112,
+              101,
+              120,
+              73,
+              65,
+              67,
+              34,
+              44,
+              34,
+              98,
+              111,
+              111,
+              107,
+              73,
+              100,
+              34,
+              58,
+              49,
+              44,
+              34,
+              99,
+              117,
+              115,
+              116,
+              111,
+              109,
+              101,
+              114,
+              78,
+              97,
+              109,
+              101,
+              34,
+              58,
+              34,
+              65,
+              108,
+              97,
+              110,
+              32,
+              68,
+              105,
+              97,
+              122,
+              32,
+              65,
+              99,
+              116,
+              117,
+              97,
+              108,
+              105,
+              122,
+              97,
+              100,
+              111,
+              34,
+              44,
+              34,
+              113,
+              117,
+              97,
+              110,
+              116,
+              105,
+              116,
+              121,
+              34,
+              58,
+              49,
+              44,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              49,
+              55,
+              57,
+              48,
+              57,
+              53,
+              51,
+              55,
+              57,
+              51,
+              49,
+              51,
+              49,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 158,
+          "responseSize": 119
+        },
+        "id": "52b913f5-a16f-430d-8a43-a5e413242651",
+        "assertions": [
+          {
+            "assertion": "Nombre actualizado",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "c48dd0ba-2047-4caf-b574-47f01955a2f9",
+          "length": 18,
+          "cycles": 1,
+          "position": 17,
+          "iteration": 0,
+          "httpRequestId": "4e0c6ebd-3093-4e5e-a1bb-2789f72979cd"
+        },
+        "item": {
+          "id": "77d20b20-5066-4f80-80ab-8e063074004c",
+          "name": "Eliminar Orden",
+          "request": {
+            "url": {
+              "path": [
+                "orders",
+                "{{orderId}}"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "type": "string",
+                  "value": "{{accessToken}}",
+                  "key": "token"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9de073b2-a4f8-4c6c-90bd-5aa7713bb758",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", () => {\r\n    pm.response.to.have.status(204);\r\n});"
+                ],
+                "_lastExecutionId": "f643b0db-5b30-4252-9a56-e8b9f828ca72"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "orders",
+              "gdU21N_8Wu0SlyqpexIAC"
+            ],
+            "host": [
+              "simple-books-api",
+              "click"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer 43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+              "system": true
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "e2c4c3b1-7c8d-48dc-85f3-d7908b2335c5",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "simple-books-api.click",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "DELETE",
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "43e042cb6472b2aa551166aa95b21c2253e4b0ceb990dfa2fd4c956ddfe2753b",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "9a08022a-3f93-42e1-b092-45dbe65f1847",
+          "status": "No Content",
+          "code": 204,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "0"
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "key": "Date",
+              "value": "Fri, 02 Oct 2026 15:09:55 GMT"
+            },
+            {
+              "key": "X-Amzn-Trace-Id",
+              "value": "Root=1-6abfc943-761c660948c640f6419cc012;Parent=1111090277d9cc61;Sampled=0;Lineage=1:9ee0f5ed:0"
+            },
+            {
+              "key": "x-amzn-RequestId",
+              "value": "be27fd13-8d61-4dd0-ad79-93ecf334af28"
+            },
+            {
+              "key": "Access-Control-Allow-Origin",
+              "value": "*"
+            },
+            {
+              "key": "Access-Control-Allow-Headers",
+              "value": "Content-Type, Authorization, X-Amz-Date, X-Api-Key, X-Amz-Security-Token"
+            },
+            {
+              "key": "x-amz-apigw-id",
+              "value": "EnxilG5qoAMEgqw="
+            },
+            {
+              "key": "Access-Control-Allow-Methods",
+              "value": "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+            },
+            {
+              "key": "X-Cache",
+              "value": "Miss from cloudfront"
+            },
+            {
+              "key": "Via",
+              "value": "1.1 8e474c795a53d6737eb97f2aa45be964.cloudfront.net (CloudFront)"
+            },
+            {
+              "key": "X-Amz-Cf-Pop",
+              "value": "MIA3-P2"
+            },
+            {
+              "key": "X-Amz-Cf-Id",
+              "value": "QagZOlgzYWLmnCBImW7MW8eBoXgzktL4lk2Diuw0c9pnAlysJy5EGQ=="
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": []
+          },
+          "cookie": [],
+          "responseTime": 167,
+          "responseSize": 0
+        },
+        "id": "77d20b20-5066-4f80-80ab-8e063074004c",
+        "assertions": [
+          {
+            "assertion": "Status 204",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 2174
+    },
+    "failures": [],
+    "error": null
+  }
+}
